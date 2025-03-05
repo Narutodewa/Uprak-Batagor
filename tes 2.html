@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Left Resize Handle with Min/Max Width</title>
+<style>
+    /* Container styling */
+    .resizable-container {
+        width: 300px;
+        height: 200px;
+        border: 2px solid #007bff;
+        padding: 10px;
+        overflow: auto;
+        position: relative;
+
+    }
+
+    /* Left-side resize handle */
+    .resize-handle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 8px;
+        height: 100%;
+        cursor: ew-resize; /* Horizontal resize cursor */
+        background-color: #007bff;
+    }
+
+    /* Content styling */
+    .content {
+        font-size: 16px;
+        color: #333;
+    }
+</style>
+</head>
+<body>
+
+<div class="resizable-container" id="resizable">
+    <div class="resize-handle" id="resize-handle"></div> <!-- Left resize handle -->
+    <div class="content">
+        <p>Resizable content goes here.</p>
+    </div>
+</div>
+
+<script>
+    const resizable = document.getElementById('resizable');
+    const handle = document.getElementById('resize-handle');
+
+    // Minimum and maximum width values
+    const minWidth = 150;  // Minimum width in pixels
+    const maxWidth = 500;  // Maximum width in pixels
+
+    handle.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+
+        // Starting position and width
+        const startX = e.clientX;
+        const startWidth = resizable.offsetWidth;
+
+        function resize(e) {
+            let newWidth = startWidth - (e.clientX - startX);
+
+            // Apply minimum and maximum width constraints
+            if (newWidth < minWidth) {
+                newWidth = minWidth;
+            } else if (newWidth > maxWidth) {
+                newWidth = maxWidth;
+            }
+
+            resizable.style.width = newWidth + 'px';
+        }
+
+        function stopResize() {
+            window.removeEventListener('mousemove', resize);
+            window.removeEventListener('mouseup', stopResize);
+        }
+
+        window.addEventListener('mousemove', resize);
+        window.addEventListener('mouseup', stopResize);
+    });
+</script>
+
+</body>
+</html>
